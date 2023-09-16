@@ -28,6 +28,7 @@
         tools:src="@tools:sample/avatars"/>
 
         <TextView
+            android:id="@+id/textUser"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignBottom="@+id/img_user"
@@ -35,6 +36,7 @@
             android:layout_marginBottom="0dp"
             android:layout_toEndOf="@id/img_user"
             android:gravity="center_vertical"
+            tools:viewBindingIgnore="true"
             android:text="Nama"
             android:textSize="18sp"
             android:textStyle="bold"
