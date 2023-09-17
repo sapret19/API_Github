@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hnf.api_github.ApiConfig
@@ -14,11 +15,11 @@ import com.hnf.api_github.data.response.ItemsItem
 import com.hnf.api_github.databinding.ActivityMainBinding
 import retrofit2.Call
 import retrofit2.Response
-import javax.security.auth.callback.Callback
+import retrofit2.Callback
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
+    private lateinit val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.item_user)
 
     companion object {
         private const val TAG = "MainActivity"
@@ -65,8 +66,11 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun getUsersData(items: ItemsItem) {
-        binding.
+    private fun getUsersData(getUser: List<ItemsItem>) {
+        val adapter = UserAdapter()
+        adapter.submitList(getUser)
+        binding.rvUser.adapter = adapter
+        binding.t
     }
 
     private fun showLoading(isLoading: Boolean) {
