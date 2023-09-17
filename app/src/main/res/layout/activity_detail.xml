@@ -37,20 +37,20 @@
         android:padding="8dp"
         android:layout_marginTop="8dp"
         android:gravity="center"
+        android:orientation="vertical"
         >
 
-        <Button
-            android:layout_width="130dp"
-            android:layout_height="50dp"
-            android:text="Followers"
-            android:layout_margin="8dp"/>
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/design_default_color_primary"
+            app:tabTextColor="@color/white"/>
 
-
-        <Button
-            android:layout_width="130dp"
-            android:layout_height="50dp"
-            android:text="Following"
-            android:layout_margin="8dp"/>
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
 
     </LinearLayout>
