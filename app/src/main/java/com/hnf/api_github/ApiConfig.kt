@@ -8,7 +8,7 @@ import retrofit2.create
 
 object ApiConfig {
 
-    val BASE_URL = "https://api.github.com/"
+    private const val BASE_URL = "https://api.github.com/"
 
     val apiService: ApiService
         get() {
