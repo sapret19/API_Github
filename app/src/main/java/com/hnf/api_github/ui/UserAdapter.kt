@@ -30,15 +30,19 @@ class UserAdapter(
         return MyViewHolder(itemView)
     }
 
-    override fun getItemCount(): Int {
-        TODO("Not yet implemented")
-    }
+    override fun getItemCount(): Int = dataList.size
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.tvName.text = dataList.get(position).items?.get(position)?.login
-        Glide.with(this)
+        Glide.with(context)
             .load(dataList.get(position).items?.get(position)?.avatarUrl)
-            .into(binding)
+            .into(holder.tvAvatar)
+    }
+
+    fun setData(data: ArrayList<GithubResponse>){
+        dataList.clear()
+        dataList.addAll(data)
+        notifyDataSetChanged()
     }
 
 }

@@ -16,68 +16,44 @@ import com.hnf.api_github.databinding.ActivityMainBinding
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Callback
+import retrofit2.http.Query
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var adapter: UserAdapter
 
-    companion object {
-        private const val TAG = "MainActivity"
-        private const val ID = "search/users?q={username}"
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        supportActionBar?.hide()
+        adapter = UserAdapter(this@MainActivity, arrayListOf())
 
-        val layoutManager = LinearLayoutManager(this)
-        binding.rvUser.layoutManager = layoutManager
-        val itemDecoration = DividerItemDecoration(this, layoutManager.orientation)
-        binding.rvUser.addItemDecoration(itemDecoration)
-
-        getUsers()
+        binding
     }
 
-    private fun getUsers(){
-        showLoading(true)
-        val client = ApiConfig.getApiService().getUsers(ID)
-        client.enqueue(object : Callback<GithubResponse> {
+    fun remoteGetUsers(){
+        ApiConfig.apiService.getUsers("q").enqueue(object : Callback<ArrayList<GithubResponse>>{
             override fun onResponse(
-                call: Call<GithubResponse>,
-                response: Response<GithubResponse>
+                call: Call<ArrayList<GithubResponse>>,
+                response: Response<ArrayList<GithubResponse>>
             ) {
-                showLoading(false)
-                if (response.isSuccessful) {
-                    val responseBody = response.body()
-                    if (responseBody != null) {
-                        getUsersData (responseBody.items)
-                    }
-                } else {
-                    Log.e(TAG, "onFailure: ${response.message()}")
+                if (response.isSuccessful){
+                    val data = response.body()
+                    setDataToAdapter(data)
                 }
             }
 
-            override fun onFailure(call: Call<GithubResponse>, t: Throwable) {
-                showLoading(false)
-                Log.e(TAG, "onFailure: ${t.message}")
+            override fun onFailure(call: Call<ArrayList<GithubResponse>>, t: Throwable) {
+                Log.d("Error", "" + t.stackTraceToString())
             }
+
         })
     }
 
-    private fun getUsersData(getUser: List<ItemsItem>) {
-        val adapter = UserAdapter()
-        adapter.submitList(getUser)
-        binding.rvUser.adapter = adapter
-        binding.t
+    fun setDataToAdapter(data: ArrayList<GithubResponse>){
+        adapter.setData(data)
     }
 
-    private fun showLoading(isLoading: Boolean) {
-        if (isLoading) {
-            binding.progressBar.visibility = View.VISIBLE
-        } else {
-            binding.progressBar.visibility = View.GONE
-        }
     }
-}
