@@ -19,7 +19,7 @@ import retrofit2.Callback
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.item_user)
+    private lateinit var binding: ActivityMainBinding
 
     companion object {
         private const val TAG = "MainActivity"
