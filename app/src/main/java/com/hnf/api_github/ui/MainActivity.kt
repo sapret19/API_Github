@@ -10,6 +10,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.search.SearchView
 import com.hnf.api_github.ApiConfig
 import com.hnf.api_github.R
 import com.hnf.api_github.data.response.GithubResponse
@@ -19,18 +20,27 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
-
+    private lateinit var userAdapter: UserAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         val user = findViewById<RecyclerView>(R.id.rvUser)
         val progressBar = findViewById<ProgressBar>(R.id.progressBar)
 
+        userAdapter = UserAdapter(emptyList())
+        user.apply {
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            setHasFixedSize(true)
+            adapter = userAdapter
+        }
+
         progressBar.visibility = View.VISIBLE
-        ApiConfig.getService().getUsers("Hanafi").enqueue(object : Callback<GithubResponse>{
+        ApiConfig.getService().getUsers("hanafi").enqueue(object : Callback<GithubResponse>{
             override fun onResponse(
                 call: Call<GithubResponse>,
                 response: Response<GithubResponse>
