@@ -1,10 +1,12 @@
 package com.hnf.api_github.ui
 
+import android.content.ClipData.Item
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -16,33 +18,34 @@ import com.hnf.api_github.databinding.ItemUserBinding
 import de.hdodenhof.circleimageview.CircleImageView
 
 class UserAdapter(
-    private val context: Context,
-    private val dataList: ArrayList<GithubResponse>
+    val dataList: List<ItemsItem>
 ): RecyclerView.Adapter<UserAdapter.MyViewHolder>() {
-    class MyViewHolder (val view: View): RecyclerView.ViewHolder(view){
-        val tvAvatar = view.findViewById<CircleImageView>(R.id.img_user)
-        val tvName = view.findViewById<TextView>(R.id.textUser)
+    class MyViewHolder (view: View): RecyclerView.ViewHolder(view){
+        val tvAvatar: CircleImageView = view.findViewById<CircleImageView>(R.id.img_user)
+        val tvName: TextView = view.findViewById<TextView>(R.id.textUser)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val layoutInflater = LayoutInflater.from(parent.context)
-        val itemView = layoutInflater.inflate(R.layout.item_user, parent, false)
-        return MyViewHolder(itemView)
+
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_user, parent, false)
+        return MyViewHolder(view)
     }
 
     override fun getItemCount(): Int = dataList.size
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.tvName.text = dataList.get(position).items?.get(position)?.login
-        Glide.with(context)
-            .load(dataList.get(position).items?.get(position)?.avatarUrl)
+        holder.tvName.text = dataList?.get(position)?.login
+        Glide.with(holder.tvAvatar)
+            .load(dataList?.get(position)?.avatarUrl)
+            .error(R.drawable.ic_launcher_background)
             .into(holder.tvAvatar)
+
+        holder.itemView.setOnClickListener{
+            val name = dataList?.get(position)?.login
+            Toast.makeText(holder.itemView.context, "${name}", Toast.LENGTH_SHORT).show()
+        }
     }
 
-    fun setData(data: ArrayList<GithubResponse>){
-        dataList.clear()
-        dataList.addAll(data)
-        notifyDataSetChanged()
-    }
+
 
 }
