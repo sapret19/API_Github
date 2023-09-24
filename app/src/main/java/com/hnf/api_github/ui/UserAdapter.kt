@@ -2,6 +2,7 @@ package com.hnf.api_github.ui
 
 import android.content.ClipData.Item
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.hnf.api_github.DetailActivity
 import com.hnf.api_github.R
 import com.hnf.api_github.data.response.GithubResponse
 import com.hnf.api_github.data.response.ItemsItem
@@ -41,8 +43,14 @@ class UserAdapter(
             .into(holder.tvAvatar)
 
         holder.itemView.setOnClickListener{
-            val name = dataList?.get(position)?.login
-            Toast.makeText(holder.itemView.context, "${name}", Toast.LENGTH_SHORT).show()
+            val username = dataList?.get(position)?.login
+            val avatar = dataList?.get(position)?.avatarUrl
+
+            val intent= Intent(holder.itemView.context, DetailActivity::class.java)
+            intent.putExtra("NAMA_KEY", username)
+            intent.putExtra("AVATAR_KEY", avatar)
+
+            holder.itemView.context.startActivity(intent)
         }
     }
 

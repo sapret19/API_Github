@@ -60,8 +60,10 @@ class MainActivity : AppCompatActivity() {
             adapter = userAdapter
         }
 
+        
+
         progressBar.visibility = View.VISIBLE
-        ApiConfig.getService().getUsers("hanafi").enqueue(object : Callback<GithubResponse> {
+        ApiConfig.apiService.getUsers("x").enqueue(object : Callback<GithubResponse> {
             override fun onResponse(
                 call: Call<GithubResponse>,
                 response: Response<GithubResponse>

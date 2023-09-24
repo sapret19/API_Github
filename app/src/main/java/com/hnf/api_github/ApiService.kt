@@ -1,10 +1,12 @@
 package com.hnf.api_github
 
+import com.hnf.api_github.data.response.DetailResponse
 import com.hnf.api_github.data.response.GithubResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Headers
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
@@ -15,8 +17,8 @@ interface ApiService {
 //        @Header("Authorization") authToken: String
     ) : Call<GithubResponse>
 
-//    @GET ("users/{username}")
-//    fun getDetailUser (
-//        @Path("username") username : String
-//    ) : Call<DetailUserResponse>
+    @GET("users/{username}")
+    fun getDetailUser(
+        @Path("username") username: String
+    ): Call<DetailResponse>
 }
