@@ -8,36 +8,50 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
-import androidx.appcompat.widget.SearchView
+import com.google.android.material.search.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.search.SearchBar
 import com.hnf.api_github.ApiConfig
 import com.hnf.api_github.R
 import com.hnf.api_github.data.response.GithubResponse
 import com.hnf.api_github.data.response.ItemsItem
+import com.hnf.api_github.databinding.ActivityMainBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
     private lateinit var userAdapter: UserAdapter
-    private lateinit var searchView: SearchView
-    private lateinit var searchBar: EditText
+    private lateinit var binding: ActivityMainBinding
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val user = findViewById<RecyclerView>(R.id.rvUser)
         val progressBar = findViewById<ProgressBar>(R.id.progressBar)
         val searchView = findViewById<SearchView>(R.id.searchView)
-        val searchBar = findViewById<EditText>(R.id.searchBar)
+        val searchBar = findViewById<SearchBar>(R.id.searchBar)
+
+        with(binding){
+            searchView.setupWithSearchBar(searchBar)
+            searchView
+                .editText
+                .setOnEditorActionListener { textView, actionId, event ->
+                    searchBar.text = searchView.text
+                    searchView.hide()
+                    Toast.makeText(this@MainActivity, searchView.text, Toast.LENGTH_SHORT).show()
+                    false
+                }
+        }
 
         userAdapter = UserAdapter(emptyList())
         user.apply {
@@ -47,13 +61,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         progressBar.visibility = View.VISIBLE
-        ApiConfig.getService().getUsers("hanafi").enqueue(object : Callback<GithubResponse>{
+        ApiConfig.getService().getUsers("hanafi").enqueue(object : Callback<GithubResponse> {
             override fun onResponse(
                 call: Call<GithubResponse>,
                 response: Response<GithubResponse>
             ) {
                 progressBar.visibility = View.GONE
-                if (response.isSuccessful){
+                if (response.isSuccessful) {
                     val responseUser = response.body()
                     val dataUser = responseUser?.items
                     val userAdapter = UserAdapter(dataUser as List<ItemsItem>)
@@ -71,30 +85,5 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(applicationContext, t.localizedMessage, Toast.LENGTH_SHORT).show()
             }
         })
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                searchBar.setText(query)
-                searchView.clearFocus()  // Close the search view
-                Toast.makeText(this@MainActivity, query, Toast.LENGTH_SHORT).show()
-                return true
-            }
 
-            override fun onQueryTextChange(newText: String?): Boolean {
-                // Tindakan yang diambil saat teks diubah
-                return false
-            }
-        })
-
-        searchBar.setOnEditorActionListener { textView, actionId, event ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                searchBar.text = Editable.Factory.getInstance().newEditable(searchView.query)
-                searchView.visibility = View.GONE
-                Toast.makeText(this@MainActivity, searchView.query, Toast.LENGTH_SHORT).show()
-                return@setOnEditorActionListener true
-            }
-            return@setOnEditorActionListener false
-        }
-
-    }
-
-    }
+    }}
